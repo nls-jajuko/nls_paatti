@@ -73,7 +73,7 @@ function init() {
     showProgressBar();
     addLDrawObject(modelFileList['Lighthouse']);
 
-    vessel();
+    addVessel();
     addVecMap();
     updateSun();
 
@@ -173,7 +173,7 @@ function addOcean() {
 
 }
 
-function vessel() {
+function addVessel() {
     // load a resource
     const loader = new OBJLoader();
     loader.load(
