@@ -1,0 +1,32 @@
+{
+  "name": "nls_paatti",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build --experimental-scope-hoisting --public-url . index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mapbox-gl": "^1.13.0",
+    "three": "^0.123.0"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "parcel": "^1.12.4"
+  },
+  "browserslist": {
+    "production": [
+      "last 3 chrome versions",
+      "last 3 firefox versions",
+      "last 3 safari versions"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 3 safari version"
+    ]
+  }
+}
