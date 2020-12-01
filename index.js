@@ -18,6 +18,13 @@ let envMapActivated = false;
 let logo_mesh;
 let pmremGenerator ;
 
+
+/* API-KEY - get one free at maanmittauslaitos.fi */
+const  apiKey = '7cd2ddae-9f2e-481c-99d0-404e7bc7a0b2',
+    vecMapStylePath = 'https://avoin-karttakuva.maanmittauslaitos.fi/vectortiles/stylejson/v20/hobby.json?api-key=' + apiKey;
+
+/* Some online resources */
+/* maybe these could be inlined - don't have the time now to figure out */
 const ldrawPath = 'https://beta-karttakuva.maanmittauslaitos.fi/model/',
     waterNormalsPath = 'https://beta-karttakuva.maanmittauslaitos.fi/model/waternormals.jpg',
     logoPath = 'https://beta-karttakuva.maanmittauslaitos.fi/model/mml-logo-fi.png';
@@ -211,15 +218,13 @@ function addVessel() {
 }
 
 function addVecMap() {
-    /* API-KEY */
-    var apiKey = '7cd2ddae-9f2e-481c-99d0-404e7bc7a0b2';
 
     /* VECTOR TILE MAP */
 
     var map = new mapboxgl.Map({
         container: 'map', // container id
         hash: true,
-        style: 'https://avoin-karttakuva.maanmittauslaitos.fi/vectortiles/stylejson/v20/hobby.json?api-key=' + apiKey,
+        style: vecMapStylePath,
         center: [19.13196, 60.29986], // starting position [lng, lat]
         zoom: 14.39 // starting zoom
     });
