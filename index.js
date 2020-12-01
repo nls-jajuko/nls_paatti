@@ -7,7 +7,7 @@ import { Sky } from './Sky.js';
 import { OBJLoader } from './OBJLoader.js';
 import mapboxgl from 'mapbox-gl';
 
-let container, progressBarDiv;
+let container;
 
 let camera, scene, renderer, controls;
 let water, sun, sky;
@@ -76,12 +76,10 @@ function init() {
     addSky();
 
 
-    addProgressBar();
-    showProgressBar();
+    addVecMap();
     addLDrawObject(modelFileList['Lighthouse']);
 
     addVessel();
-    addVecMap();
     updateSun();
 
     window.setTimeout(() => {
@@ -89,18 +87,6 @@ function init() {
         controls.autoRotateSpeed = 1.0;
 
     }, 30000);
-}
-function addProgressBar() {
-    progressBarDiv = document.createElement('div');
-    progressBarDiv.innerText = "Loading...";
-    progressBarDiv.style.fontSize = "2em";
-    progressBarDiv.style.color = "#ff0000";
-    progressBarDiv.style.display = "block";
-    progressBarDiv.style.position = "absolute";
-    progressBarDiv.style.top = "50%";
-    progressBarDiv.style.width = "100%";
-    progressBarDiv.style.textAlign = "center";
-
 }
 
 function addSky() {
@@ -185,17 +171,25 @@ function addVessel() {
     const loader = new OBJLoader();
     loader.load(
         // resource URL
-        ldrawPath + 'Cruisership_2012/Cruiser_2012.obj',
+        ldrawPath + //'Cruisership_2012/Cruiser_2012.txt',
+            'ShipsByQuaternius/OBJ/CruiseShip.txt',
         // called when resource is loaded
         function (object) {
-
+            const material = new THREE.MeshStandardMaterial({ color: 0xD00000, metalness: 0.9, roughness: 0.5 });
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
-
-                    /*                     child.material.ambient.setHex(0xFF0000);*/
-                    child.material.color.setHex(0xC00000);
+                    child.material = material;
+                    child.material.needsUpdate = true;
+//                    child.material.ambient.setHex(0xFF0000);
+//                    child.material.color.setHex(0xC00000);
                 }
             });
+
+
+            object.scale.set(50,50,50);
+            object.rotation.y = Math.PI * 1.0 +0.3;
+            object.position.x = 300;
+            object.position.z = 400;
 
             scene.add(object);
             mesh = object
@@ -203,8 +197,6 @@ function addVessel() {
         },
         // called when loading is in progresses
         function (xhr) {
-
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
 
         },
         // called when loading has errors
@@ -242,7 +234,6 @@ function addLDrawObject(ldrawModelPath) {
 
     model = null;
 
-    updateProgressBar(0);
 
     const lDrawLoader = new LDrawLoader();
     lDrawLoader.separateObjects = false;
@@ -262,7 +253,6 @@ function addLDrawObject(ldrawModelPath) {
 
             scene.add(model);
 
-            hideProgressBar();
 
         }, onProgress, onError);
 
@@ -287,14 +277,9 @@ function animate() {
     const time = performance.now() * 0.001;
 
     if (mesh) {
-        mesh.position.y = Math.sin(time) * 0.0001 - 20;
-        mesh.rotation.x = Math.cos(time) * 0.001;
+        mesh.position.y = Math.sin(time) * 0.001 - 60;
+        mesh.rotation.x = Math.cos(time) * 0.02;
         mesh.rotation.z = time * Math.sin(time) * 0.002;
-        //mesh.rotation.z = 0;//(time-(Math.floor(time/Math.PI)*Math.PI)) * 0.2 * rotdir;
-
-        //    mesh.rotation.y = Math.cos(time);
-        //mesh.position.x = 200* Math.cos(time) + 0;
-        //mesh.position.z = 200*Math.sin(time) + 0; // These to strings make it work
     }
     if (logo_mesh) {
         logo_mesh.rotation.y = Math.cos(time);
@@ -316,8 +301,6 @@ function onProgress(xhr) {
 
     if (xhr.lengthComputable) {
 
-        updateProgressBar(xhr.loaded / xhr.total);
-
         console.log(Math.round(xhr.loaded / xhr.total * 100, 2) + '% downloaded');
 
     }
@@ -327,25 +310,8 @@ function onProgress(xhr) {
 function onError() {
 
     const message = "Error loading model";
-    progressBarDiv.innerText = message;
     console.log(message);
 
 }
 
-function showProgressBar() {
 
-    document.body.appendChild(progressBarDiv);
-
-}
-
-function hideProgressBar() {
-
-    document.body.removeChild(progressBarDiv);
-
-}
-
-function updateProgressBar(fraction) {
-
-    progressBarDiv.innerText = 'Loading... ' + Math.round(fraction * 100, 2) + '%';
-
-}
